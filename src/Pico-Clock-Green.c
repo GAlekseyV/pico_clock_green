@@ -62,44 +62,44 @@ struct repeating_timer timer2;
 int port_init(void)// GPIO初始化
 {
   stdio_init_all();
-  gpio_init(A0);
-  gpio_init(A1);
-  gpio_init(A2);
+  gpio_init(A0_PIN);
+  gpio_init(A1_PIN);
+  gpio_init(A2_PIN);
 
-  gpio_init(SDI);
-  gpio_init(LE);
-  gpio_init(OE);
-  gpio_init(CLK);
-  gpio_init(SQW);
-  gpio_init(BUZZ);
-  gpio_init(SET_FUNCTION);
-  gpio_init(UP);
-  gpio_init(DOWN);
+  gpio_init(SDI_PIN);
+  gpio_init(LE_PIN);
+  gpio_init(OE_PIN);
+  gpio_init(CLK_PIN);
+  gpio_init(SQW_PIN);
+  gpio_init(BUZZ_PIN);
+  gpio_init(KEY_MID_PIN);
+  gpio_init(KEY_UP_PIN);
+  gpio_init(KEY_DOWN_PIN);
 
-  gpio_set_dir(A0, GPIO_OUT);
-  gpio_set_dir(A1, GPIO_OUT);
-  gpio_set_dir(A2, GPIO_OUT);
-  gpio_set_dir(SDI, GPIO_OUT);
-  gpio_set_dir(OE, GPIO_OUT);
-  gpio_set_dir(LE, GPIO_OUT);
-  gpio_set_dir(CLK, GPIO_OUT);
+  gpio_set_dir(A0_PIN, GPIO_OUT);
+  gpio_set_dir(A1_PIN, GPIO_OUT);
+  gpio_set_dir(A2_PIN, GPIO_OUT);
+  gpio_set_dir(SDI_PIN, GPIO_OUT);
+  gpio_set_dir(OE_PIN, GPIO_OUT);
+  gpio_set_dir(LE_PIN, GPIO_OUT);
+  gpio_set_dir(CLK_PIN, GPIO_OUT);
 
-  gpio_set_dir(SQW, GPIO_IN);
-  gpio_set_dir(BUZZ, GPIO_OUT);
+  gpio_set_dir(SQW_PIN, GPIO_IN);
+  gpio_set_dir(BUZZ_PIN, GPIO_OUT);
 
   // iic config
   i2c_init(I2C_PORT, 100000);
-  gpio_set_function(SDA, GPIO_FUNC_I2C);
-  gpio_set_function(SCL, GPIO_FUNC_I2C);
-  gpio_pull_up(SDA);
-  gpio_pull_up(SCL);
+  gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
+  gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
+  gpio_pull_up(SDA_PIN);
+  gpio_pull_up(SCL_PIN);
 
   // adc config
   adc_init();
 
   // Make sure GPIO is high-impedance, no pullups etc
-  adc_gpio_init(ADC_Light);
-  adc_gpio_init(ADC_VCC);
+  adc_gpio_init(AIN_PIN);
+  adc_gpio_init(ADC_VREF_PIN);
   // Select ADC input 0 (GPIO26)
   adc_select_input(3);
 }
@@ -122,12 +122,12 @@ int main(void)
       adc_show_flag = 0;
       if (adc_show_time == 0) {
         update_time = 1;
-        gpio_set_dir(SET_FUNCTION, GPIO_IN);
-        gpio_set_dir(UP, GPIO_IN);
-        gpio_set_dir(DOWN, GPIO_IN);
-        gpio_pull_up(SET_FUNCTION);
-        gpio_pull_up(UP);
-        gpio_pull_up(DOWN);
+        gpio_set_dir(KEY_MID_PIN, GPIO_IN);
+        gpio_set_dir(KEY_UP_PIN, GPIO_IN);
+        gpio_set_dir(KEY_DOWN_PIN, GPIO_IN);
+        gpio_pull_up(KEY_MID_PIN);
+        gpio_pull_up(KEY_UP_PIN);
+        gpio_pull_up(KEY_DOWN_PIN);
       }
     }
     if (KEY_Set_flag == 1)// 设置按钮被单击，进入普通设置模式
@@ -178,7 +178,7 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
   beep_stop_judge();
   Flashing_start_judge();
   scroll_show_judge();
-  if (gpio_get(SET_FUNCTION) == 0)// 检测设置按钮是否被按下
+  if (gpio_get(KEY_MID_PIN) == 0)// 检测设置按钮是否被按下
   {
     KEY_cnt++;
   } else {
@@ -206,7 +206,7 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
     } else
       KEY_cnt = 0;
   }
-  if (gpio_get(UP) == 0)//+标号
+  if (gpio_get(KEY_UP_PIN) == 0)//+标号
   {
     UP_cnt++;
   } else {
@@ -259,7 +259,7 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
     else
       UP_cnt = 0;
   }
-  if (gpio_get(DOWN) == 0)//-标号
+  if (gpio_get(KEY_DOWN_PIN) == 0)//-标号
   {
     Exit_cnt++;
   } else {
@@ -357,7 +357,7 @@ bool repeating_timer_callback_s(struct repeating_timer *t)// 1s 进入一次
 
   Min_count++;
   if (alarm_star_flag == 1) {
-    gpio_put(BUZZ, 0);
+    gpio_put(BUZZ_PIN, 0);
     alarm_star_flag = 0;
   }
 
@@ -366,7 +366,7 @@ bool repeating_timer_callback_s(struct repeating_timer *t)// 1s 进入一次
     if (alarm_open_sta != 0) {
       if (Time_RTC.dayofweek == alarm_day_select && Ds3231_check_alarm() == true) {
         alarm_star_flag = 1;
-        gpio_put(BUZZ, 1);
+        gpio_put(BUZZ_PIN, 1);
       }
     }
 
@@ -407,7 +407,7 @@ bool repeating_timer_callback_s(struct repeating_timer *t)// 1s 进入一次
     if (Timing_sec_temp == 0 && Timing_min_temp == 0) {
       Timing_DN_flag = 0;
       Timing_DN_close_flag = 1;
-      gpio_put(BUZZ, 1);
+      gpio_put(BUZZ_PIN, 1);
       beep_on_flag = 1;
     } else {
       Timing_sec_temp--;
@@ -443,7 +443,7 @@ bool repeating_timer_callback_s(struct repeating_timer *t)// 1s 进入一次
     if (min_temp == 0 && Full_time_alarm_count > 0) {
 
       if (Full_time_alarm_count != 5) {
-        gpio_put(BUZZ, 1);
+        gpio_put(BUZZ_PIN, 1);
         beep_on_flag = 1;
       }
       Full_time_alarm_count--;
@@ -1388,7 +1388,7 @@ void beep_stop_judge()
   if (beep_on_flag == 1) {
     beep_on_count++;
     if (beep_on_count == 80) {
-      gpio_put(BUZZ, 0);
+      gpio_put(BUZZ_PIN, 0);
       beep_on_count = 0;
       beep_on_flag = 0;
     }
@@ -1503,7 +1503,7 @@ void Special_Exit()
 void beep_start_judge()
 {
   if (beep_sta == 1) {
-    gpio_put(BUZZ, 1);
+    gpio_put(BUZZ_PIN, 1);
     beep_on_flag = 1;
   }
 }

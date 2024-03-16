@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-set (PICO_SDK_PATH "C:/Raspberry Pi/Pico SDK v1.5.1/pico-sdk")
 # initialize the SDK directly
 include(pico_sdk_import.cmake)
 
