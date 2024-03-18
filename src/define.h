@@ -33,7 +33,7 @@
 #define SCL_PIN 7
 #define SQW_PIN 3
 
-// SM5166 
+// SM5166
 #define A0_PIN 16
 #define A1_PIN 18
 #define A2_PIN 22
@@ -88,90 +88,4 @@ typedef enum {
   ALARM_MODE_SEC_MATCHED,
   ALARM_MODE_ONCE_PER_SECOND
 } AlarmMode;
-
-//----------------星期LED指示灯定义-------------------------
-
-#define Monday                          \
-  {                                     \
-    disp_buf[0] |= (1 << 3) | (1 << 4); \
-  }
-#define DisMonday                          \
-  {                                        \
-    disp_buf[0] &= ~((1 << 3) | (1 << 4)); \
-  }
-#define Tuesday                         \
-  {                                     \
-    disp_buf[0] |= (1 << 6) | (1 << 7); \
-  }
-#define DisTuesday                         \
-  {                                        \
-    disp_buf[0] &= ~((1 << 6) | (1 << 7)); \
-  }
-#define Wednesday                       \
-  {                                     \
-    disp_buf[8] |= (1 << 1) | (1 << 2); \
-  }
-#define DisWednesday                       \
-  {                                        \
-    disp_buf[8] &= ~((1 << 1) | (1 << 2)); \
-  }
-#define Thursday                        \
-  {                                     \
-    disp_buf[8] |= (1 << 4) | (1 << 5); \
-  }
-#define DisThursday                        \
-  {                                        \
-    disp_buf[8] &= ~((1 << 4) | (1 << 5)); \
-  }
-#define Friday                \
-  {                           \
-    disp_buf[8] |= (1 << 7);  \
-    disp_buf[16] |= (1 << 0); \
-  }
-#define DisFriday              \
-  {                            \
-    disp_buf[8] &= ~(1 << 7);  \
-    disp_buf[16] &= ~(1 << 0); \
-  }
-#define Saturday                         \
-  {                                      \
-    disp_buf[16] |= (1 << 2) | (1 << 3); \
-  }
-#define DisSaturday                         \
-  {                                         \
-    disp_buf[16] &= ~((1 << 2) | (1 << 3)); \
-  }
-#define Sunday                           \
-  {                                      \
-    disp_buf[16] |= (1 << 5) | (1 << 6); \
-  }
-#define DisSunday                           \
-  {                                         \
-    disp_buf[16] &= ~((1 << 5) | (1 << 6)); \
-  }
-//----------------状态LED指示灯定义-------------------------
-#define dis_move_open disp_buf[0] |= 0X03
-#define dis_move_close disp_buf[0] &= ~0X03
-#define dis_Alarm_en disp_buf[1] |= 0X03
-#define dis_Alarm_close disp_buf[1] &= ~0x03
-#define dis_CountDown disp_buf[2] |= 0X03
-#define dis_CountDown_close disp_buf[2] &= ~0x03
-#define dis_F_flag disp_buf[3] |= (1 << 0)
-#define dis_F_flag_close disp_buf[3] &= ~(1 << 0)
-#define dis_C_flag disp_buf[3] |= (1 << 1)
-#define dis_C_flag_close disp_buf[3] &= ~(1 << 1)
-#define dis_AM disp_buf[4] |= (1 << 0)
-#define dis_AM_close disp_buf[4] &= ~(1 << 0)
-#define dis_PM disp_buf[4] |= (1 << 1)
-#define dis_PM_close disp_buf[4] &= ~(1 << 1)
-#define dis_CountUp disp_buf[5] |= 0X03
-#define dis_CountUp_close disp_buf[5] &= ~0x03
-#define dis_hourly_chime disp_buf[6] |= 0X03
-#define dis_hourly_chime_close disp_buf[6] &= ~0X03
-#define dis_Auto_light disp_buf[7] |= 0X03
-#define dis_Auto_light_close disp_buf[7] &= ~0X03
-#define back_light_on disp_buf[0] |= (1 << 2) | (1 << 5)
-#define back_light_off disp_buf[0] &= ~((1 << 2) | (1 << 5))
-
-
 #endif

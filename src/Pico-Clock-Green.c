@@ -7,6 +7,7 @@
 #include "Ds3231.h"
 #include "hardware/adc.h"
 #include "hardware/i2c.h"
+#include "display.h"
 #include "ziku.h"
 
 unsigned char month_date[2][12] = { { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
@@ -471,67 +472,67 @@ void select_weekday(unsigned char x)// 显示星期几
 {
   switch (x) {
   case 0:
-    Monday;
-    DisTuesday;
-    DisWednesday;
-    DisThursday;
-    DisFriday;
-    DisSaturday;
-    DisSunday;
+    monday_leds_on(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 1:
-    DisMonday;
-    Tuesday;
-    DisWednesday;
-    DisThursday;
-    DisFriday;
-    DisSaturday;
-    DisSunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_on(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 2:
-    DisMonday;
-    DisTuesday;
-    Wednesday;
-    DisThursday;
-    DisFriday;
-    DisSaturday;
-    DisSunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_on(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 3:
-    DisMonday;
-    DisTuesday;
-    DisWednesday;
-    Thursday;
-    DisFriday;
-    DisSaturday;
-    DisSunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_on(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 4:
-    DisMonday;
-    DisTuesday;
-    DisWednesday;
-    DisThursday;
-    Friday;
-    DisSaturday;
-    DisSunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_on(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 5:
-    DisMonday;
-    DisTuesday;
-    DisWednesday;
-    DisThursday;
-    DisFriday;
-    Saturday;
-    DisSunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_on(disp_buf);
+    sunday_leds_off(disp_buf);
     break;
   case 6:
-    DisMonday;
-    DisTuesday;
-    DisWednesday;
-    DisThursday;
-    DisFriday;
-    DisSaturday;
-    Sunday;
+    monday_leds_off(disp_buf);
+    tuesday_leds_off(disp_buf);
+    wednesday_leds_off(disp_buf);
+    thursday_leds_off(disp_buf);
+    friday_leds_off(disp_buf);
+    saturday_leds_off(disp_buf);
+    sunday_leds_on(disp_buf);
     break;
   }
 }
