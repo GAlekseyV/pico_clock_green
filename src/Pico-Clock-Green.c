@@ -5,9 +5,9 @@
  */
 
 #include "Ds3231.h"
+#include "display.h"
 #include "hardware/adc.h"
 #include "hardware/i2c.h"
-#include "display.h"
 #include "ziku.h"
 
 unsigned char month_date[2][12] = { { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
@@ -108,7 +108,7 @@ int port_init(void)// GPIO初始化
 int main(void)
 {
   port_init();
-  dis_C_flag;
+  cel_led_on(disp_buf);
 
   struct repeating_timer timer;
   struct repeating_timer timer1;
@@ -218,11 +218,11 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
       if (set_id == 0) {
         temp_sta = !temp_sta;
         if (temp_sta == 0) {
-          dis_C_flag;
-          dis_F_flag_close;
+          cel_led_on(disp_buf);
+          fah_led_off(disp_buf);
         } else {
-          dis_C_flag_close;
-          dis_F_flag;
+          fah_led_on(disp_buf);
+          cel_led_off(disp_buf);
         }
       }
       if (beep_flag == 1)// 按键声音可设置标志位
@@ -235,9 +235,9 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
       {
         scroll_sta = !scroll_sta;
         if (scroll_sta != 0) {
-          dis_move_open;
+          move_open_led_on(disp_buf);
         } else {
-          dis_move_close;
+          move_open_led_off(disp_buf);
         }
       }
       Alarm_set(UP_flag);
@@ -271,9 +271,9 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
       {
         adc_light_flag = !adc_light_flag;
         if (adc_light_flag != 0) {
-          dis_Auto_light;
+          autolight_led_on(disp_buf);
         } else {
-          dis_Auto_light_close;
+          autolight_led_off(disp_buf);
         }
       }
       if (beep_flag == 1)// 按键声音可设置标志位
@@ -286,9 +286,9 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
       {
         scroll_sta = !scroll_sta;
         if (scroll_sta != 0) {
-          dis_move_open;
+          move_open_led_on(disp_buf);
         } else {
-          dis_move_close;
+          move_open_led_off(disp_buf);
         }
       }
       if (Full_time_flag == 1) {
@@ -650,16 +650,16 @@ void Show_Time()// 显示时间
   {
     if (Set_hour_temp > 12) {
       hour_temp = Set_hour_temp - 12;
-      dis_PM;
-      dis_AM_close;
+      pm_led_on(disp_buf);
+      am_led_off(disp_buf);
     } else if (Set_hour_temp == 12) {
       hour_temp = 12;
-      dis_PM;
-      dis_AM_close;
+      pm_led_on(disp_buf);
+      am_led_off(disp_buf);
     } else {
       hour_temp = Set_hour_temp;
-      dis_AM;
-      dis_PM_close;
+      am_led_on(disp_buf);
+      pm_led_off(disp_buf);
     }
   } else {
     hour_temp = Set_hour_temp;
@@ -787,10 +787,10 @@ void dis_SetMode()
     display_char(13, '0' & flag_Flashing[9]);
     if (Full_time_sta != 0) {
       display_char(18, 'N' & flag_Flashing[9]);
-      dis_hourly_chime;
+      hourly_led_on(disp_buf);
     } else {
       display_char(18, 'F' & flag_Flashing[9]);
-      dis_hourly_chime_close;
+      hourly_led_off(disp_buf);
     }
     cls_disp(26);
   } else {
@@ -895,18 +895,18 @@ void dis_Timing()
     if (Timing_mode_sta == 0) {
       display_char(13, 'U' & flag_Flashing[1]);
       display_char(18, 'P' & flag_Flashing[1]);
-      dis_CountUp;
-      dis_CountDown_close;
+      countup_led_on(disp_buf);
+      countdown_led_off(disp_buf);
     } else if (Timing_mode_sta == 1) {
       display_char(13, 'D' & flag_Flashing[1]);
       display_char(18, 'N' & flag_Flashing[1]);
-      dis_CountDown;
-      dis_CountUp_close;
+      countdown_led_on(disp_buf);
+      countup_led_off(disp_buf);
     } else if (Timing_mode_sta == 2) {
       display_char(13, '0' & flag_Flashing[1]);
       display_char(18, 'F' & flag_Flashing[1]);
-      dis_CountDown_close;
-      dis_CountUp_close;
+      countdown_led_off(disp_buf);
+      countup_led_off(disp_buf);
     }
     cls_disp(26);
 
@@ -972,7 +972,7 @@ void dis_Timing()
       Timing_mode_sta = 2;
       Timing_min_temp = 0;
       Timing_sec_temp = 0;
-      dis_CountUp_close;
+      countup_led_off(disp_buf);
     }
     No_operation_count = 0;
     No_operation_flag = 0;
@@ -1206,9 +1206,9 @@ void Alarm_set(uint8_t UP_DOWN_flag)
   {
     alarm_open_sta = !alarm_open_sta;
     if (alarm_open_sta != 0) {
-      dis_Alarm_en;
+      alarm_led_on(disp_buf);
     } else {
-      dis_Alarm_close;
+      alarm_led_off(disp_buf);
     }
   }
   if (alarm_select_flag == 1)// 闹钟选择可设置标志位
@@ -1259,22 +1259,22 @@ void Timing_set(uint8_t UP_DOWN_flag)
   {
     Time_set_mode_sta = !Time_set_mode_sta;
     if (Time_set_mode_sta == 0) {
-      dis_AM_close;
-      dis_PM_close;
+      am_led_off(disp_buf);
+      pm_led_off(disp_buf);
     } else {
 
       if (Set_hour_temp > 12) {
         hour_temp = Set_hour_temp - 12;
-        dis_PM;
-        dis_AM_close;
+        pm_led_on(disp_buf);
+        am_led_off(disp_buf);
       } else if (Set_hour_temp == 12) {
         hour_temp = 12;
-        dis_PM;
-        dis_AM_close;
+        pm_led_on(disp_buf);
+        am_led_off(disp_buf);
       } else {
         hour_temp = Set_hour_temp;
-        dis_AM;
-        dis_PM_close;
+        am_led_on(disp_buf);
+        pm_led_off(disp_buf);
       }
     }
   }
@@ -1296,16 +1296,16 @@ void Time_set(uint8_t UP_DOWN_flag)
     {
       if (Set_hour_temp > 12) {
         hour_temp = Set_hour_temp - 12;
-        dis_PM;
-        dis_AM_close;
+        pm_led_on(disp_buf);
+        am_led_off(disp_buf);
       } else if (Set_hour_temp == 12) {
         hour_temp = 12;
-        dis_PM;
-        dis_AM_close;
+        pm_led_on(disp_buf);
+        am_led_off(disp_buf);
       } else {
         hour_temp = Set_hour_temp;
-        dis_AM;
-        dis_PM_close;
+        am_led_on(disp_buf);
+        pm_led_off(disp_buf);
       }
 
     } else {
