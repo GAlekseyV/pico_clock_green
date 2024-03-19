@@ -15,15 +15,15 @@ unsigned char month_date[2][12] = { { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30
 unsigned char disp_buf[112];// 缓冲区字节，对应24x8个点及滚动字节
 unsigned char CS_cnt;// 行选计数
 unsigned char UP_id = 0, UP_Key_flag = 0, KEY_Set_flag = 0, No_operation_flag = 0, No_operation_count;// 触发按键检测
-unsigned char adc_light_flag = 0, adc_light_time_flag = 0, light_set = 0;
+unsigned char adc_light_flag = 0, adc_light_time_flag = 0;
 uint16_t adc_light, adc_light_count = 0;// 设置自动亮度
 unsigned char set_id = 0, update_time = 0, scroll_start_count = 0, scroll_show_flag = 0, scroll_show_start = 0;
-unsigned char alarm_id = 0, alarm_flag = 0, beep_sta = 1, beep_flag = 0, beep_on_flag = 0, beep_on_count = 0, scroll_flag = 0, scroll_sta = 0, scroll_count = 0, scroll_start = 0;// 蜂鸣器及滚动
+unsigned char alarm_id = 0, alarm_flag = 0, beep_sta = 1, beep_flag = 0, beep_on_flag = 0, scroll_flag = 0, scroll_sta = 0, scroll_count = 0, scroll_start = 0;// 蜂鸣器及滚动
 unsigned char alarm_hour_temp = 0, alarm_min_temp = 0, alarm_hour_flag = 0, alarm_min_flag = 0, alarm_day_select_flag = 0, alarm_day_select = 1;
 unsigned char Set_time_hour_flag = 0, Set_time_min_flag = 0, Set_time_year_flag = 0, Set_time_month_flag = 0, Set_time_dayofmonth_flag = 0, Set_hour_temp = 0, Set_min_temp = 0, change_time_flag = 0;
 unsigned char alarm_select_flag = 0, alarm_open_flag = 0, alarm_select_sta = 0, alarm_open_sta = 0, hour_temp, min_temp, year_temp, month_temp, dayofmonth_temp, year_high_temp = 20;// 闹钟及时间
 unsigned char Min_count = 0, alarm_star_flag = 0, Timing_show_count = 0, Timing_show_sec = 0;
-uint16_t KEY_cnt = 0, UP_cnt = 0, Exit_cnt = 0, Flashing_count = 0, whole_year, adc_count = 0, write_flag = 0;
+uint16_t KEY_cnt = 0, UP_cnt = 0, Exit_cnt = 0, whole_year, adc_count = 0, write_flag = 0;
 unsigned char Timing_mode_flag = 0, Timing_mode_sta = 2, Timing_min_flag = 0, Timing_sec_flag = 0, Timing_min_temp = 0, Timing_sec_temp = 0, Timing_DN_flag = 0, Timing_UP_Key_flag = 0, Timing_DN_close_flag = 0;// 计时
 unsigned char Time_set_mode_flag = 0, Time_set_mode_sta = 0, Full_time_flag = 0, Full_time_sta = 0, Full_time_alarm_count = 5;// 整点报时、时间模式
 char Time_buf[4];
@@ -159,6 +159,7 @@ int main(void)
 
 bool repeating_timer_callback_us(struct repeating_timer *t)// us
 {
+  static unsigned int light_set = 0;
   if (adc_light > 2800) {
     light_set++;
     if (light_set == 3) {
@@ -355,7 +356,6 @@ bool repeating_timer_callback_ms(struct repeating_timer *t)
 
 bool repeating_timer_callback_s(struct repeating_timer *t)// 1s 进入一次
 {
-
   Min_count++;
   if (alarm_star_flag == 1) {
     gpio_put(BUZZ_PIN, 0);
@@ -1000,8 +1000,6 @@ void get_temperature()
 
 void dis_scroll()
 {
-
-
   if (scroll_show_flag == 1) {
     get_temperature();
     display_char(32, '2');
@@ -1386,6 +1384,7 @@ void adc_show_count()
 
 void beep_stop_judge()
 {
+  static unsigned char beep_on_count = 0;
   if (beep_on_flag == 1) {
     beep_on_count++;
     if (beep_on_count == 80) {
@@ -1398,10 +1397,11 @@ void beep_stop_judge()
 
 void Flashing_start_judge()
 {
+  static uint16_t flashing_count = 0;
   if (set_id != 0) {
-    Flashing_count++;
-    if (Flashing_count == 600) {
-      Flashing_count = 0;
+    flashing_count++;
+    if (flashing_count == 600) {
+      flashing_count = 0;
       flag_Flashing[set_id] = ~flag_Flashing[set_id];
 
       if (alarm_id == 1)
