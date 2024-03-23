@@ -131,24 +131,28 @@ int main(void)
         gpio_pull_up(KEY_DOWN_PIN);
       }
     }
+
     if (KEY_Set_flag == 1)// 设置按钮被单击，进入普通设置模式
     {
       No_operation_flag = 1;
       dis_SetMode();
       KEY_Set_flag = 0;
     }
+
     if (alarm_flag == 1)// 长按进入闹钟设置
     {
       No_operation_flag = 1;
       dis_alarm();
       alarm_flag = 0;
     }
+
     if (UP_Key_flag == 1) {
       No_operation_flag = 1;
       dis_Timing();
       UP_Key_flag = 0;
     }
-    if (update_time == 1)// 刷新时间
+
+    if (update_time == 1)// Show time
     {
       Show_Time();
       update_time = 0;
@@ -694,17 +698,18 @@ void Show_Time()// 显示时间
     select_weekday(6);
 }
 
+// Переключение режимов
 void dis_SetMode()
 {
   if (set_id < 3)// 设置小时和分钟
   {
-    if (set_id == 1) {
+    if (set_id == 1) {// Set hours
       if (Set_time_hour_flag == 0) {
         Set_hour_temp = BCD_to_Byte(Time_RTC.hour);
       }
       Set_time_hour_flag = 1;
     }
-    if (set_id == 2) {
+    if (set_id == 2) {// Set minutes
       if (Set_time_min_flag == 0) {
         Set_min_temp = BCD_to_Byte(Time_RTC.minutes);
       }
@@ -715,7 +720,7 @@ void dis_SetMode()
     display_char(10, ':');
     display_char(13, (min_temp / 10 + '0') & flag_Flashing[2]);
     display_char(18, (min_temp % 10 + '0') & flag_Flashing[2]);
-  } else if (set_id == 3) {
+  } else if (set_id == 3) {// set year
     whole_year = year_high_temp * 100 + year_temp;
     Set_time_year_flag = 1;
     display_char(0, year_high_temp / 10 + 0x30);
@@ -725,10 +730,10 @@ void dis_SetMode()
     display_char(23, ' ');
   } else if (set_id == 4 || set_id == 5) {
     whole_year = year_high_temp * 100 + year_temp;
-    if (set_id == 4) {
+    if (set_id == 4) {// set month
       Set_time_month_flag = 1;
     }
-    if (set_id == 5) {
+    if (set_id == 5) {// set day
 
       Set_time_dayofmonth_flag = 1;
     }
@@ -1042,6 +1047,7 @@ void dis_scroll()
     display_char(49, Time_RTC.minutes / 16 + 0x30);
     display_char(54, Time_RTC.minutes % 16 + 0x30);
   }
+
   for (i = 1; i < 8; i++) {
     save_buf = disp_buf[i] & 0x03;// 保留功能位
     for (jr = 0; jr < sizeof(disp_buf) / 8; jr++) {
@@ -1058,85 +1064,9 @@ void dis_scroll()
 unsigned char get_month_date(uint16_t year_cnt, uint8_t month_cnt)// 判断一个月的最大天数
 {
   if ((year_cnt % 4 == 0 && year_cnt % 100 != 0) || year_cnt % 400 == 0) {
-    switch (month_cnt) {
-    case 1:
-      return month_date[0][0];
-      break;
-    case 2:
-      return month_date[0][1];
-      break;
-    case 3:
-      return month_date[0][2];
-      break;
-    case 4:
-      return month_date[0][3];
-      break;
-    case 5:
-      return month_date[0][4];
-      break;
-    case 6:
-      return month_date[0][5];
-      break;
-    case 7:
-      return month_date[0][6];
-      break;
-    case 8:
-      return month_date[0][7];
-      break;
-    case 9:
-      return month_date[0][8];
-      break;
-    case 10:
-      return month_date[0][9];
-      break;
-    case 11:
-      return month_date[0][10];
-      break;
-    case 12:
-      return month_date[0][11];
-      break;
-    }
-
-  } else {
-    switch (month_cnt) {
-    case 1:
-      return month_date[1][0];
-      break;
-    case 2:
-      return month_date[1][1];
-      break;
-    case 3:
-      return month_date[1][2];
-      break;
-    case 4:
-      return month_date[1][3];
-      break;
-    case 5:
-      return month_date[1][4];
-      break;
-    case 6:
-      return month_date[1][5];
-      break;
-    case 7:
-      return month_date[1][6];
-      break;
-    case 8:
-      return month_date[1][7];
-      break;
-    case 9:
-      return month_date[1][8];
-      break;
-    case 10:
-      return month_date[1][9];
-      break;
-    case 11:
-      return month_date[1][10];
-      break;
-    case 12:
-      return month_date[1][11];
-      break;
-    }
+    return month_date[0][month_cnt - 1];
   }
+  return month_date[1][month_cnt - 1];
 }
 
 unsigned char get_weekday(uint16_t year_cnt, uint8_t month_cnt, uint8_t date_cnt)// 根据年月日判断星期几
@@ -1147,29 +1077,10 @@ unsigned char get_weekday(uint16_t year_cnt, uint8_t month_cnt, uint8_t date_cnt
     year_cnt--;
   }
   weekday = (date_cnt + 1 + 2 * month_cnt + 3 * (month_cnt + 1) / 5 + year_cnt + year_cnt / 4 - year_cnt / 100 + year_cnt / 400) % 7;
-  switch (weekday) {
-  case 0:
+  if (weekday == 0) {
     return 7;
-    break;
-  case 1:
-    return 1;
-    break;
-  case 2:
-    return 2;
-    break;
-  case 3:
-    return 3;
-    break;
-  case 4:
-    return 4;
-    break;
-  case 5:
-    return 5;
-    break;
-  case 6:
-    return 6;
-    break;
   }
+  return weekday;
 }
 
 uint16_t get_ads1015()// 获取光敏传感器的值
