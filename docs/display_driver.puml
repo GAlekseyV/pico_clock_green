@@ -1,0 +1,41 @@
+@startuml Display driver
+Class DisplayDriver{
+  + monday_leds_on(unsigned char[])
+  + monday_leds_off(unsigned char[])
+  + tuesday_leds_on(unsigned char[]);
+  + tuesday_leds_off(unsigned char[]);
+  + wednesday_leds_on(unsigned char[]);
+  + wednesday_leds_off(unsigned char[]);
+  + thursday_leds_on(unsigned char[]);
+  + thursday_leds_off(unsigned char[]);
+  + friday_leds_on(unsigned char[]);
+  + friday_leds_off(unsigned char[]);
+  + saturday_leds_on(unsigned char[]);
+  + saturday_leds_off(unsigned char[]);
+  + sunday_leds_on(unsigned char[]);
+  + sunday_leds_off(unsigned char[]);
+
+  + move_open_led_on(unsigned char[]);
+  + move_open_led_off(unsigned char[]);
+  + alarm_led_on(unsigned char[]);
+  + alarm_led_off(unsigned char[]);
+  + countdown_led_on(unsigned char[]);
+  + countdown_led_off(unsigned char[]);
+  + fah_led_on(unsigned char[]);
+  + fah_led_off(unsigned char[]);
+  + cel_led_on(unsigned char[]);
+  + cel_led_off(unsigned char[]);
+  + am_led_on(unsigned char[]);
+  + am_led_off(unsigned char[]);
+  + pm_led_on(unsigned char[]);
+  + pm_led_off(unsigned char[]);
+  + countup_led_on(unsigned char[]);
+  + countup_led_off(unsigned char[]);
+  + hourly_led_on(unsigned char[]);
+  + hourly_led_off(unsigned char[]);
+  + autolight_led_on(unsigned char[]);
+  + autolight_led_off(unsigned char[]);
+  + back_light_on(unsigned char[]);
+  + back_light_off(unsigned char[]);
+}
+@enduml

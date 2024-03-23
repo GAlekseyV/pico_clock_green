@@ -1,0 +1,26 @@
+@startuml Pico clock statechart
+state Show_acd_voltage
+state Show_time
+state Set_hours
+state Set_minutes
+state Set_year
+state Set_month
+state Set_day
+state Set_BP
+state Set_DP
+state Set_MD
+state Set_FT
+
+[*] --> Show_acd_voltage
+Show_acd_voltage --> Show_time : Time remained
+Show_time --> Set_hours : Up button pressed
+Set_hours --> Set_minutes : Up button pressed
+Set_minutes --> Set_year : Up button pressed
+Set_year --> Set_month : Up button pressed
+Set_month --> Set_day : Up button pressed
+Set_day --> Set_BP : Up buttton pressed
+Set_BP --> Set_DP : Up button pressed
+Set_DP --> Set_MD : Up button pressed
+Set_MD --> Set_FT : Up button pressed
+Set_FT --> Show_time : Up button pressed
+@enduml
